@@ -32,6 +32,20 @@ def addValues():
     connection.commit()
     connection.close()
 
+def dataUpdate(idPair, homework):
+    connection = sqlite3.connect("./database.db")
+    cursor = connection.cursor()
+
+    cursor.execute('''
+    UPDATE Couples
+    SET
+        homework = ?
+    WHERE id = ?
+    ''', (homework, idPair)) 
+
+    connection.commit()
+    connection.close()
+    
 
 def getListForRender(start, stop):
     connection = sqlite3.connect("./database.db")
@@ -85,9 +99,11 @@ def handle_post():
 
     date = transmitdata["date"]
     pairindex = transmitdata["pairindex"]
-    pairname = transmitdata["pairname"]
     homework = transmitdata["homework"]
-    print(date, pairindex, pairname, homework)
+    
+    idPair = date + str(int(pairindex) - 1)
+    print(idPair, homework)
+    dataUpdate(idPair, homework)    
 
 if __name__ == '__main__':
     app.run()

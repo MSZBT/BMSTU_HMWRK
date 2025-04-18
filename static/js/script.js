@@ -69,7 +69,7 @@ submitButton.addEventListener('click', async function(event) {
     let date = overlay.querySelector("#popup > div.placeBlock > div > p.placeBlockName").getAttribute("datevalue");
     let pairIndex = overlay.querySelector("#popup > div.placeBlock > div > p.placeBlockName").getAttribute("pairindex");
     let pairName = card.querySelector("#popup > div.placeBlock > div > p.placeBlockName").textContent;
-    let dz = card.querySelector("#inputText").textContent;
+    let dz = card.querySelector("#inputText").value;
 
     const transmitData = {
         "date": date, 
@@ -109,7 +109,7 @@ openPopupBtns.forEach(openPopupBtn => {
         overlay.querySelector("#popup > div.placeBlock > div > p.placeBlockName").textContent = pairName;
         overlay.querySelector("#popup > div.placeBlock > div > p.placeBlockName").setAttribute("pairindex", String(pairIndex));
         overlay.querySelector("#popup > div.placeBlock > div > p.placeBlockName").setAttribute("datevalue", String(dateValue));
-        overlay.querySelector("#inputText").textContent = dz;
+        overlay.querySelector("#inputText").value = dz;
         
     });
 });
