@@ -125,12 +125,39 @@
         <p class="attention">Коснитесь, чтобы посмотреть или редактировать</p>
 
         <div class="slider">
-            
+            {% for pairday in listTransmit %}
             <div class="slide">
                 <div class="actionBlock" >
+                    {% for pair in pairday %}
                     <div class="pair" id="openPopupBtn">
                         <div class="dateblock">
-                            <p date="24">1 пара</p><!--ОБЯЗАТЕЛЬНО ВСТАВИТЬ ПРИ РЕНДЕРИНГЕ-->
+                            <p date="{{ pair[1] }}" indification="{{ pair[0] }}">{{ pair[2] + 1 }} пара</p>
+                        </div>
+                        <div class="infoblock">
+                            <div class="meetInfoBlock">
+                                <span class="cabname">{{ pair[5] }}</span>
+                                <span class="typePair">{{ pair[6] }}</span>
+                            </div>
+
+                            <div class="dzblock">
+                                <p class="predmet">{{ pair[3] }}</p>
+                                <p class="getDataDz">{{ pair[4] }}</p>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+
+                </div>
+            </div>
+            {% endfor %}
+
+            <!--
+            <div class="slide">
+                <div class="actionBlock" >
+                    
+                    <div class="pair" id="openPopupBtn">
+                        <div class="dateblock">
+                            <p date="24">1 пара</p> ОБЯЗАТЕЛЬНО ВСТАВИТЬ ПРИ РЕНДЕРИНГЕ
                         </div>
                         <div class="infoblock">
                             <div class="meetInfoBlock">
@@ -242,7 +269,7 @@
             <div class="slide">3</div>
             <div class="slide">4</div>
             <div class="slide">5</div>
-            <div class="slide">6</div>   
+            <div class="slide">6</div>-->   
         </div> 
         
         

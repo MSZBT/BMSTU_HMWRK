@@ -1,7 +1,5 @@
 from flask import Flask, render_template, jsonify, request
-import sqlite3
-
-
+import sqlite3, jinja2
 
 
 def initDb():
@@ -34,21 +32,37 @@ def addValues():
     connection.commit()
     connection.close()
 
-def getValues():
+
+def getListForRender(start, stop):
     connection = sqlite3.connect("./database.db")
     cursor = connection.cursor()
 
-    cursor.execute('''SELECT * FROM Couples''')
-    selection = cursor.fetchall()
+    listForRender = []
 
+    for day in range(start, stop + 1):
+        cursor.execute(f'''SELECT * FROM Couples WHERE date = {day}''')
+        middleList = cursor.fetchall()
+        if (middleList):
+            listForRender.append(middleList)
     connection.commit()
     connection.close()
-    print(selection)
+    return listForRender
+
+
+
 app = Flask(__name__)
 
+
+startDay = 20
+endDay = 26
 #initDb()
 #addValues()
-getValues()
+#getListForRender(startDay, endDay)
+
+
+
+
+#Указатели начала и канца отслеживаемых данных
 
 @app.route('/')
 def renderMain():
@@ -56,7 +70,9 @@ def renderMain():
 
 @app.route('/studentPage.html')
 def renderStudent():
-    return render_template("studentPage.html")
+    listTransmit = getListForRender(startDay, endDay)
+    print(listTransmit)
+    return render_template("studentPage.html", listTransmit=listTransmit)
 
 @app.route('/mainPage.html')
 def renderMain_fromstudent():
