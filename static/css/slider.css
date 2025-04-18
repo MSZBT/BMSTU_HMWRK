@@ -1,0 +1,97 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.slider {
+    display: flex;
+    overflow-x: scroll; 
+    scroll-snap-type: x mandatory; 
+    width: 100%; 
+    height: 300px; 
+    -webkit-overflow-scrolling: touch; 
+    position: relative; 
+}
+  
+
+.slide {
+  flex: none;
+  width: 100%;
+  scroll-snap-align: start; 
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: lightgray;
+  font-size: 2rem;
+  scrollbar-width: none;
+}
+  
+.slide::-webkit-scrollbar {
+  width: 0;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+}
+
+
+.sliderControl {
+  display: flex;
+  overflow-x: scroll; 
+  scroll-snap-type: x mandatory; 
+
+  margin-top: 60px;
+  width: 100%; 
+  height: 70px; 
+  scroll-behavior: smooth; 
+  -webkit-overflow-scrolling: touch; 
+  position: relative; 
+}
+
+.slideControl {
+  flex: none;
+  width: 100%;
+  scroll-snap-align: start; 
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-color: rgb(56, 53, 53);
+  padding: 20px;
+  font-size: 2rem;
+
+  scrollbar-width: none;
+}
+  
+.slideControl::-webkit-scrollbar {
+  width: 0;
+}
+
+::-webkit-scrollbar {
+  width: 0;
+}
+
+.controlButton {
+  padding: 5px;
+
+  background-color: aliceblue;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+
+
+.controlButton .data {
+  font-size: 24px;
+}
+
+.controlButton .day {
+  margin-top: -10px;
+  font-size: 15px;
+}
+
+.active {
+  background-color: brown;
+}
