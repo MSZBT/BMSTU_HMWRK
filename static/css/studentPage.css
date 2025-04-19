@@ -144,6 +144,7 @@ header {
     justify-content: flex-start;
     align-items: center;
 
+    min-width: 40px;
     border-radius: 5px;
 }
 
@@ -163,9 +164,12 @@ header {
 }
 
 .active {
-    background-color: var(--main-blue-color);
+    background-color: var(--main-blue-color) !important;
 }
 
+.setday {
+    background-color: #1a1a1a6c;
+}
 
 .attention {
     color: var(--grey-text-color);

@@ -1,5 +1,7 @@
 from flask import Flask, render_template, jsonify, request
 import sqlite3, jinja2
+from datetime import datetime, timedelta
+import calendar
 
 
 def initDb():
@@ -32,6 +34,9 @@ def addValues():
     connection.commit()
     connection.close()
 
+def split_array(arr, chunk_size=6):
+    return [arr[i:i + chunk_size] for i in range(0, len(arr), chunk_size)]
+
 def dataUpdate(idPair, homework):
     connection = sqlite3.connect("./database.db")
     cursor = connection.cursor()
@@ -62,13 +67,29 @@ def getListForRender(start, stop):
     connection.close()
     return listForRender
 
+def getlistTransmitData():
+    year = datetime.now().year
+    month = datetime.now().month
 
+    date = datetime.now().day
+    dates = calendar.monthcalendar(year, month) + calendar.monthcalendar(year if month != 12 else year + 1, month + 1 if month != 12 else 1)
+    
+    for datelist in dates:
+        if date in datelist:
+            dates = dates[dates.index(datelist) : dates.index(datelist) + 4] 
+            dates = [date for datelist in dates for date in datelist if date != 0]
+            
+            break
+    dates.pop(20)
+    dates.pop(13)
+    dates.pop(6)
+    dates = split_array(dates, 6)
+    return dates, dates[0][0], dates[-1][-1], date
 
 app = Flask(__name__)
 
 
-startDay = 20
-endDay = 26
+
 #initDb()
 #addValues()
 #getListForRender(startDay, endDay)
@@ -84,9 +105,17 @@ def renderMain():
 
 @app.route('/studentPage.html')
 def renderStudent():
+    
+    returnDateList = getlistTransmitData()
+
+    listTransmitDate = returnDateList[0]
+    startDay = returnDateList[1]
+    endDay = returnDateList[2]
+    currentday = returnDateList[3]
+
     listTransmit = getListForRender(startDay, endDay)
-    print(listTransmit)
-    return render_template("studentPage.html", listTransmit=listTransmit)
+
+    return render_template("studentPage.html", listTransmit=listTransmit, listTransmitDate=listTransmitDate, dayNameList = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб'], currentday=currentday)
 
 @app.route('/mainPage.html')
 def renderMain_fromstudent():

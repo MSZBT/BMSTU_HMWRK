@@ -25,101 +25,23 @@
         </div>
 
         <div class="sliderControl">
-            <div class="slideControl">
-                <div class="controlButton active">
-                    <span class="data">24</span>
-                    <span class="day">пн</span>
+            {% for datelist in listTransmitDate %}
+                <div class="slideControl">
+                    {% for date in datelist %}
+                        {% if date == currentday %}
+                            <div class="controlButton active setday">
+                                <span class="data">{{ date }}</span>
+                                <span class="day">{{ dayNameList[date % 7] }}</span>
+                            </div>
+                        {% else %}
+                            <div class="controlButton">
+                                <span class="data">{{ date }}</span>
+                                <span class="day">{{ dayNameList[date % 7] }}</span>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
                 </div>
-                
-                <div class="controlButton">
-                    <span class="data">25</span>
-                    <span class="day">пн</span>
-                </div>
-
-                <div class="controlButton">
-                    <span class="data">26</span>
-                    <span class="day">пн</span>
-                </div>
-
-                <div class="controlButton">
-                    <span class="data">27</span>
-                    <span class="day">пн</span>
-                </div>
-
-                <div class="controlButton">
-                    <span class="data">28</span>
-                    <span class="day">пн</span>
-                </div>
-
-                <div class="controlButton">
-                    <span class="data">29</span>
-                    <span class="day">пн</span>
-                </div>
-            </div>
-
-            <div class="slideControl">
-                <div class="controlButton">
-                    <span class="data">24</span>
-                    <span class="day">пн</span>
-                </div>
-                
-                <div class="controlButton">
-                    <span class="data">25</span>
-                    <span class="day">пн</span>
-                </div>
-
-                <div class="controlButton">
-                    <span class="data">26</span>
-                    <span class="day">пн</span>
-                </div>
-
-                <div class="controlButton">
-                    <span class="data">27</span>
-                    <span class="day">пн</span>
-                </div>
-
-                <div class="controlButton">
-                    <span class="data">28</span>
-                    <span class="day">пн</span>
-                </div>
-
-                <div class="controlButton">
-                    <span class="data">29</span>
-                    <span class="day">пн</span>
-                </div>
-            </div>
-
-            <div class="slideControl">
-                <div class="controlButton">
-                    <span class="data">24</span>
-                    <span class="day">пн</span>
-                </div>
-                
-                <div class="controlButton">
-                    <span class="data">25</span>
-                    <span class="day">пн</span>
-                </div>
-
-                <div class="controlButton">
-                    <span class="data">26</span>
-                    <span class="day">пн</span>
-                </div>
-
-                <div class="controlButton">
-                    <span class="data">27</span>
-                    <span class="day">пн</span>
-                </div>
-
-                <div class="controlButton">
-                    <span class="data">28</span>
-                    <span class="day">пн</span>
-                </div>
-
-                <div class="controlButton">
-                    <span class="data">29</span>
-                    <span class="day">пн</span>
-                </div>
-            </div>
+            {% endfor %}
         </div> 
 
         <p class="attention">Коснитесь, чтобы посмотреть или редактировать</p>
@@ -149,131 +71,8 @@
 
                 </div>
             </div>
-            {% endfor %}
-
-            <!--
-            <div class="slide">
-                <div class="actionBlock" >
-                    
-                    <div class="pair" id="openPopupBtn">
-                        <div class="dateblock">
-                            <p date="24">1 пара</p> ОБЯЗАТЕЛЬНО ВСТАВИТЬ ПРИ РЕНДЕРИНГЕ
-                        </div>
-                        <div class="infoblock">
-                            <div class="meetInfoBlock">
-                                <span class="cabname">1</span>
-                                <span class="typePair">he</span>
-                            </div>
-
-                            <div class="dzblock">
-                                <p class="predmet">Информатика</p>
-                                <p class="getDataDz">дз1</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="pair" id="openPopupBtn">
-                        <div class="dateblock">
-                            <p>2 пара</p>
-                        </div>
-                        <div class="infoblock">
-                            <div class="meetInfoBlock">
-                                <span class="cabname">2</span>
-                                <span class="typePair">he2</span>
-                            </div>
-
-                            <div class="dzblock">
-                                <p class="predmet">химия</p>
-                                <p class="getDataDz">дз2</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="pair" id="openPopupBtn">
-                        <div class="dateblock">
-                            <p>3 пара</p>
-                        </div>
-                        <div class="infoblock">
-                            <div class="meetInfoBlock">
-                                <span class="cabname">3</span>
-                                <span class="typePair">he3</span>
-                            </div>
-
-                            <div class="dzblock">
-                                <p class="predmet">история</p>
-                                <p class="getDataDz">дз3</p>
-                            </div>
-                        </div>
-                    </div>
-
-
-
-                </div>
-            </div>
-
-
-
-            <div class="slide">
-                <div class="actionBlock">
-
-                    <div class="pair">
-                        <div class="dateblock">
-                            <p>1 пара</p>
-                        </div>
-                        <div class="infoblock">
-                            <div class="meetInfoBlock">
-                                <span class="cabname">221x</span>
-                                <span class="typePair">лекция</span>
-                            </div>
-
-                            <div class="dzblock">
-                                <p class="predmet">Информатика</p>
-                                <p class="getDataDz">дз1</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="pair">
-                        <div class="dateblock">
-                            <p>2 пара</p>
-                        </div>
-                        <div class="infoblock">
-                            <div class="meetInfoBlock">
-                                <span class="cabname">221x</span>
-                                <span class="typePair">лекция</span>
-                            </div>
-
-                            <div class="dzblock">
-                                <p class="predmet">Информатика</p>
-                                <p class="getDataDz">дз1</p>
-                            </div>
-                        </div>
-                    </div>
-
-
-                </div>
-            </div>
-
-            <div class="slide">3</div>
-            <div class="slide">4</div>
-            <div class="slide">5</div>
-            <div class="slide">6</div>  
-            <div class="slide">1</div>
-            <div class="slide">2</div>
-            <div class="slide">3</div>
-            <div class="slide">4</div>
-            <div class="slide">5</div>
-            <div class="slide">6</div> 
-            <div class="slide">1</div>
-            <div class="slide">2</div>
-            <div class="slide">3</div>
-            <div class="slide">4</div>
-            <div class="slide">5</div>
-            <div class="slide">6</div>-->   
-        </div> 
-        
-        
-        
+            {% endfor %}  
+        </div>
     </div>
 
 
