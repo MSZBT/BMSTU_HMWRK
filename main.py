@@ -4,6 +4,15 @@ import sqlite3, jinja2
 from datetime import datetime, timedelta
 import calendar
 
+
+def bigprint():
+    connection = sqlite3.connect("./database.db")
+    cursor = connection.cursor()
+    cursor.execute('''SELECT * FROM Couples''')
+    rows = cursor.fetchall()
+    print(rows)
+    connection.close()
+
 def split_array(arr, chunk_size=6):
     return [arr[i:i + chunk_size] for i in range(0, len(arr), chunk_size)]
 
@@ -25,14 +34,14 @@ def initDb():
     connection.commit()
     connection.close()
 
-def addValues():
+def addValues(i_d, date, index, pairname, homework, cab, typ):
     connection = sqlite3.connect("./database.db")
     cursor = connection.cursor()
     
     cursor.execute('''
         INSERT INTO Couples(id, date, pairindex, pairname, homework, cab, pairtype) 
         VALUES (?, ?, ?, ?, ?, ?, ?)
-    ''', (str(26) + str(1), 26, 1, 'pairname', 'homework1', 'cab', 'pairtype'))
+    ''', (i_d, date, index, pairname + str(date), homework, cab, typ))
 
     connection.commit()
     connection.close()
@@ -50,20 +59,22 @@ def dataUpdate(idPair, homework):
 
     connection.commit()
     connection.close()
-    
-def getListForRender(start, stop):
+
+def getListForRender(listTransmitDate):
     connection = sqlite3.connect("./database.db")
     cursor = connection.cursor()
 
+    dates = [date for datelist in listTransmitDate for date in datelist]
     listForRender = []
 
-    for day in range(start, stop + 1):
+    for day in dates:
         cursor.execute(f'''SELECT * FROM Couples WHERE date = {day}''')
         middleList = cursor.fetchall()
         if (middleList):
             listForRender.append(middleList)
     connection.commit()
     connection.close()
+
     return listForRender
 
 def getlistTransmitData():
@@ -84,87 +95,99 @@ def getlistTransmitData():
     dates.pop(13)
     dates.pop(6)
     dates = split_array(dates, 6)
-    return dates, dates[0][0], dates[-1][-1], date
+    return dates, date
 
 def DBrenew():
     flag = 0 #отвечает за изменение числителся / знаменателя
-    lastRunDay =0
+    lastRunDay = 0
     while True:
-        date = datetime.now().day
-        dates = getlistTransmitData()
-        executionList_flag0 = [
-            (str(dates[3][0] + 0), dates[3][0], 0, "Пар нет", "Отдыхай", "дом", "Солнышко"),
+        #date = datetime.now().day
+        date = 21
+        dates = getlistTransmitData()[0]
+        print(dates)
+        if lastRunDay != date and [data for subdates in dates for data in subdates].index(date) in [0, 6, 12]:
+            executionList_flag0 = [
+                (str(dates[2][0]) + "0", dates[2][0], 0, "Пар нет", "Отдыхай", "дом", "Солнышко"),
 
-            (str(dates[3][1] + 0), dates[3][1], 0, "Химия", "Нет | еще не занесено", "327.1", "Лекция"),
-            (str(dates[3][1] + 1), dates[3][1], 1, "Информатика", "Нет | еще не занесено", "601к", "Семинар"),
-            (str(dates[3][1] + 2), dates[3][1], 2, "ФЛИТА", "Нет | еще не занесено", "601к", "Семинар"),
+                (str(dates[2][1]) + "0", dates[2][1], 0, "Химия", "Нет | еще не занесено", "327.1", "Лекция"),
+                (str(dates[2][1]) + "1", dates[2][1], 1, "Информатика", "Нет | еще не занесено", "601к", "Семинар"),
+                (str(dates[2][1]) + "2", dates[2][1], 2, "ФЛИТА", "Нет | еще не занесено", "601к", "Семинар"),
 
-            (str(dates[3][2] + 0), dates[3][2], 0, "Информатика", "Нет | еще не занесено", "221х", "Лекция"),
-            (str(dates[3][2] + 1), dates[3][2], 1, "ИниДу", "Нет | еще не занесено", "221х", "Лекция"),
-            (str(dates[3][2] + 2), dates[3][2], 2, "ИниДу", "Нет | еще не занесено", "216х", "Семинар"),
+                (str(dates[2][2]) + "0", dates[2][2], 0, "Информатика", "Нет | еще не занесено", "221х", "Лекция"),
+                (str(dates[2][2]) + "1", dates[2][2], 1, "ИниДу", "Нет | еще не занесено", "221х", "Лекция"),
+                (str(dates[2][2]) + "2", dates[2][2], 2, "ИниДу", "Нет | еще не занесено", "216х", "Семинар"),
 
-            (str(dates[3][3] + 0), dates[3][3], 0, "Физика", "Нет | еще не занесено", "ФН4", "Лабы"),
-            (str(dates[3][3] + 1), dates[3][3], 1, "Физика", "Нет | еще не занесено", "323", "Лекция"),
-            (str(dates[3][3] + 2), dates[3][3], 2, "Химия", "Нет | еще не занесено", "241", "Лабы"),
-            (str(dates[3][3] + 3), dates[3][3], 3, "Бассейн", "Нет | еще не занесено", "СК", "Семинар"),
+                (str(dates[2][3]) + "0", dates[2][3], 0, "Физика", "Нет | еще не занесено", "ФН4", "Лабы"),
+                (str(dates[2][3]) + "1", dates[2][3], 1, "Физика", "Нет | еще не занесено", "323", "Лекция"),
+                (str(dates[2][3]) + "2", dates[2][3], 2, "Химия", "Нет | еще не занесено", "241", "Лабы"),
+                (str(dates[2][3]) + "3", dates[2][3], 3, "Бассейн", "Нет | еще не занесено", "СК", "Семинар"),
 
-            (str(dates[3][4] + 0), dates[3][4], 0, "Бассейн", "Нет | еще не занесено", "СК", "Семинар"),
-            (str(dates[3][4] + 1), dates[3][4], 1, "История", "Нет | еще не занесено", "520к", "Семинар"),
-            (str(dates[3][4] + 2), dates[3][4], 2, "ИниДу", "Нет | еще не занесено", "520к", "Семинар"),
+                (str(dates[2][4]) + "0", dates[2][4], 0, "Бассейн", "Нет | еще не занесено", "СК", "Семинар"),
+                (str(dates[2][4]) + "1", dates[2][4], 1, "История", "Нет | еще не занесено", "520к", "Семинар"),
+                (str(dates[2][4]) + "2", dates[2][4], 2, "ИниДу", "Нет | еще не занесено", "520к", "Семинар"),
 
-            (str(dates[3][5] + 0), dates[3][5], 0, "Ин. язык", "Нет | еще не занесено", "523к/514к", "Семинар"),
-            (str(dates[3][5] + 1), dates[3][5], 1, "Линал", "Нет | еще не занесено", "527к", "Семинар"),
-            (str(dates[3][5] + 2), dates[3][5], 2, "Линал", "Нет | еще не занесено", "535к", "Лекция"),
-        ]
+                (str(dates[2][5]) + "0", dates[2][5], 0, "Ин. язык", "Нет | еще не занесено", "523к/514к", "Семинар"),
+                (str(dates[2][5]) + "1", dates[2][5], 1, "Линал", "Нет | еще не занесено", "527к", "Семинар"),
+                (str(dates[2][5]) + "2", dates[2][5], 2, "Линал", "Нет | еще не занесено", "535к", "Лекция"),
+            ]
 
-        executionList_flag1 = [
-            (str(dates[3][0] + 0), dates[3][0], 0, "Пар нет", "Отдыхай", "дом", "Солнышко"),
+            executionList_flag1 = [
+                (str(dates[2][0]) + "0", dates[2][0], 0, "Пар нет", "Отдыхай", "дом", "Солнышко"),
 
-            (str(dates[3][1] + 0), dates[3][1], 0, "Химия", "Нет | еще не занесено", "327.1", "Лекция"),
-            (str(dates[3][1] + 1), dates[3][1], 1, "Информатика", "Нет | еще не занесено", "601к", "Семинар"),
-            (str(dates[3][1] + 2), dates[3][1], 2, "ФЛИТА", "Нет | еще не занесено", "601к", "Семинар"),
+                (str(dates[2][1]) + "0", dates[2][1], 0, "Химия", "Нет | еще не занесено", "327.1", "Лекция"),
+                (str(dates[2][1]) + "1", dates[2][1], 1, "Информатика", "Нет | еще не занесено", "601к", "Семинар"),
+                (str(dates[2][1]) + "2", dates[2][1], 2, "ФЛИТА", "Нет | еще не занесено", "601к", "Семинар"),
 
-            (str(dates[3][2] + 0), dates[3][2], 0, "Информатика", "Нет | еще не занесено", "221х", "Лекция"),
-            (str(dates[3][2] + 1), dates[3][2], 1, "ИниДу", "Нет | еще не занесено", "221х", "Лекция"),
-            (str(dates[3][2] + 2), dates[3][2], 2, "ФЛИТА", "Нет | еще не занесено", "221х", "Лекция"),
-            (str(dates[3][2] + 2), dates[3][2], 3, "История", "Нет | еще не занесено", "221х", "Лекция"),
+                (str(dates[2][2]) + "0", dates[2][2], 0, "Информатика", "Нет | еще не занесено", "221х", "Лекция"),
+                (str(dates[2][2]) + "1", dates[2][2], 1, "ИниДу", "Нет | еще не занесено", "221х", "Лекция"),
+                (str(dates[2][2]) + "2", dates[2][2], 2, "ФЛИТА", "Нет | еще не занесено", "221х", "Лекция"),
+                (str(dates[2][2]) + "2", dates[2][2], 3, "История", "Нет | еще не занесено", "221х", "Лекция"),
 
-            (str(dates[3][3] + 0), dates[3][3], 0, "Физика", "Нет | еще не занесено", "304", "Семинар"),
-            (str(dates[3][3] + 1), dates[3][3], 1, "Физика", "Нет | еще не занесено", "323", "Лекция"),
-            (str(dates[3][3] + 2), dates[3][3], 2, "Химия", "Нет | еще не занесено", "241", "Лабы"),
-            (str(dates[3][3] + 3), dates[3][3], 3, "Бассейн", "Нет | еще не занесено", "СК", "Семинар"),
+                (str(dates[2][3]) + "0", dates[2][3], 0, "Физика", "Нет | еще не занесено", "304", "Семинар"),
+                (str(dates[2][3]) + "1", dates[2][3], 1, "Физика", "Нет | еще не занесено", "323", "Лекция"),
+                (str(dates[2][3]) + "2", dates[2][3], 2, "Химия", "Нет | еще не занесено", "241", "Лабы"),
+                (str(dates[2][3]) + "3", dates[2][3], 3, "Бассейн", "Нет | еще не занесено", "СК", "Семинар"),
 
-            (str(dates[3][4] + 0), dates[3][4], 0, "Бассейн", "Нет | еще не занесено", "СК", "Семинар"),
-            (str(dates[3][4] + 1), dates[3][4], 1, "История", "Нет | еще не занесено", "520к", "Семинар"),
-            (str(dates[3][4] + 2), dates[3][4], 2, "ИниДу", "Нет | еще не занесено", "520к", "Семинар"),
+                (str(dates[2][4]) + "0", dates[2][4], 0, "Бассейн", "Нет | еще не занесено", "СК", "Семинар"),
+                (str(dates[2][4]) + "1", dates[2][4], 1, "История", "Нет | еще не занесено", "520к", "Семинар"),
+                (str(dates[2][4]) + "2", dates[2][4], 2, "ИниДу", "Нет | еще не занесено", "520к", "Семинар"),
 
-            (str(dates[3][5] + 0), dates[3][5], 0, "Ин. язык", "Нет | еще не занесено", "523к/514к", "Семинар"),
-            (str(dates[3][5] + 1), dates[3][5], 1, "Линал", "Нет | еще не занесено", "527к", "Семинар"),
-            (str(dates[3][5] + 2), dates[3][5], 2, "Линал", "Нет | еще не занесено", "535к", "Лекция"),
-        ]
+                (str(dates[2][5]) + "0", dates[2][5], 0, "Ин. язык", "Нет | еще не занесено", "523к/514к", "Семинар"),
+                (str(dates[2][5]) + "1", dates[2][5], 1, "Линал", "Нет | еще не занесено", "527к", "Семинар"),
+                (str(dates[2][5]) + "2", dates[2][5], 2, "Линал", "Нет | еще не занесено", "535к", "Лекция"),
+            ]
 
-        dates = [data for subdates in dates for data in subdates]
-
-        if dates.index(date) in [0, 6, 12]:
             connection = sqlite3.connect("./database.db")
             cursor = connection.cursor()
 
-            cursor.execute('''
+            #Удаление ненужных дней для отслеживания
+            cursor.execute(f'''
             DELETE FROM Couples WHERE date < {date}
             ''')
+
+            #Добавление новой недели
             cursor.executemany('INSERT INTO Couples(id, date, pairindex, pairname, homework, cab, pairtype) VALUES (?, ?, ?, ?, ?, ?, ?)', executionList_flag0 if flag == 0 else executionList_flag1)
             flag = not(flag)
 
-        connection.commit()
-        connection.close()
+            lastRunDay = date
+            bigprint()
+            
+
+            connection.commit()
+            connection.close()
+            break
+
+
+import sqlite3
+
+
 
 
 app = Flask(__name__)
 
-#initDb()
-#addValues()
-#getListForRender(startDay, endDay)
-#Указатели начала и канца отслеживаемых данных
+initDb()
+
+
 
 @app.route('/')
 def renderMain():
@@ -176,14 +199,16 @@ def renderStudent():
     returnDateList = getlistTransmitData()
 
     listTransmitDate = returnDateList[0]
-    startDay = returnDateList[1]
-    endDay = returnDateList[2]
-    currentday = returnDateList[3]
 
-    listTransmit = getListForRender(startDay, endDay)
+    #Указатели начала и канца отслеживаемых данных
 
-    print(listTransmitDate)
+    currentday = returnDateList[1]
+    listTransmit = getListForRender(listTransmitDate)
+    print("\n")
+    print(listTransmit)
+    print("\n")
 
+    bigprint()
     return render_template("studentPage.html", listTransmit=listTransmit, listTransmitDate=listTransmitDate, dayNameList = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'], currentday=currentday)
 
 @app.route('/mainPage.html')
@@ -200,8 +225,36 @@ def handle_post():
     homework = transmitdata["homework"]
     
     idPair = date + str(int(pairindex) - 1)
-    print(idPair, homework)
     dataUpdate(idPair, homework)    
+
+"""
+dates = [[21, 22, 23, 24, 25, 26], [28, 29, 30, 1, 2, 3], [5, 6, 7, 8, 9, 10]]
+executionList_flag0 = [
+    (str(dates[1][0]) + "0", dates[1][0], 0, "Пар нет", "Отдыхай", "дом", "Солнышко"),
+    (str(dates[1][1]) + "0", dates[1][1], 0, "Химия", "Нет | еще не занесено", "327.1", "Лекция"),
+    (str(dates[1][1]) + "1", dates[1][1], 1, "Информатика", "Нет | еще не занесено", "601к", "Семинар"),
+    (str(dates[1][1]) + "2", dates[1][1], 2, "ФЛИТА", "Нет | еще не занесено", "601к", "Семинар"),
+    (str(dates[1][2]) + "0", dates[1][2], 0, "Информатика", "Нет | еще не занесено", "221х", "Лекция"),
+    (str(dates[1][2]) + "1", dates[1][2], 1, "ИниДу", "Нет | еще не занесено", "221х", "Лекция"),
+    (str(dates[1][2]) + "2", dates[1][2], 2, "ИниДу", "Нет | еще не занесено", "216х", "Семинар"),
+    (str(dates[1][3]) + "0", dates[1][3], 0, "Физика", "Нет | еще не занесено", "ФН4", "Лабы"),
+    (str(dates[1][3]) + "1", dates[1][3], 1, "Физика", "Нет | еще не занесено", "323", "Лекция"),
+    (str(dates[1][3]) + "2", dates[1][3], 2, "Химия", "Нет | еще не занесено", "241", "Лабы"),
+    (str(dates[1][3]) + "3", dates[1][3], 3, "Бассейн", "Нет | еще не занесено", "СК", "Семинар"),
+    (str(dates[1][4]) + "0", dates[1][4], 0, "Бассейн", "Нет | еще не занесено", "СК", "Семинар"),
+    (str(dates[1][4]) + "1", dates[1][4], 1, "История", "Нет | еще не занесено", "520к", "Семинар"),
+    (str(dates[1][4]) + "2", dates[1][4], 2, "ИниДу", "Нет | еще не занесено", "520к", "Семинар"),
+    (str(dates[1][5]) + "0", dates[1][5], 0, "Ин. язык", "Нет | еще не занесено", "523к/514к", "Семинар"),
+    (str(dates[1][5]) + "1", dates[1][5], 1, "Линал", "Нет | еще не занесено", "527к", "Семинар"),
+    (str(dates[1][5]) + "2", dates[1][5], 2, "Линал", "Нет | еще не занесено", "535к", "Лекция"),
+]
+
+for ar in executionList_flag0:
+#def addValues(i_d, date, index, pairname, homework, cab, typ):
+    addValues(ar[0], ar[1], ar[2], ar[3], ar[4], ar[5], ar[6],)
+"""
+
+bigprint()
 
 if __name__ == '__main__':
     app.run()
