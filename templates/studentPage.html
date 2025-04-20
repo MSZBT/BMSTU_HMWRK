@@ -31,12 +31,12 @@
                         {% if date == currentday %}
                             <div class="controlButton active setday">
                                 <span class="data">{{ date }}</span>
-                                <span class="day">{{ dayNameList[date % 7] }}</span>
+                                <span class="day">{{ dayNameList[loop.index % 7 - 1] }}</span>
                             </div>
                         {% else %}
                             <div class="controlButton">
                                 <span class="data">{{ date }}</span>
-                                <span class="day">{{ dayNameList[date % 7] }}</span>
+                                <span class="day">{{ dayNameList[loop.index % 7 - 1] }}</span>
                             </div>
                         {% endif %}
                     {% endfor %}

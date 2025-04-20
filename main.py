@@ -1,8 +1,11 @@
 from flask import Flask, render_template, jsonify, request
 import sqlite3, jinja2
+
 from datetime import datetime, timedelta
 import calendar
 
+def split_array(arr, chunk_size=6):
+    return [arr[i:i + chunk_size] for i in range(0, len(arr), chunk_size)]
 
 def initDb():
     connection = sqlite3.connect("./database.db")
@@ -34,9 +37,6 @@ def addValues():
     connection.commit()
     connection.close()
 
-def split_array(arr, chunk_size=6):
-    return [arr[i:i + chunk_size] for i in range(0, len(arr), chunk_size)]
-
 def dataUpdate(idPair, homework):
     connection = sqlite3.connect("./database.db")
     cursor = connection.cursor()
@@ -51,7 +51,6 @@ def dataUpdate(idPair, homework):
     connection.commit()
     connection.close()
     
-
 def getListForRender(start, stop):
     connection = sqlite3.connect("./database.db")
     cursor = connection.cursor()
@@ -71,7 +70,8 @@ def getlistTransmitData():
     year = datetime.now().year
     month = datetime.now().month
 
-    date = datetime.now().day
+    #date = datetime.now().day
+    date = 21
     dates = calendar.monthcalendar(year, month) + calendar.monthcalendar(year if month != 12 else year + 1, month + 1 if month != 12 else 1)
     
     for datelist in dates:
@@ -86,17 +86,47 @@ def getlistTransmitData():
     dates = split_array(dates, 6)
     return dates, dates[0][0], dates[-1][-1], date
 
+def DBrenew():
+    flag = 0 #отвечает за изменение числителся / знаменателя
+
+    execution_flag0 = '''
+    '''
+
+    execution_flag1 = '''
+    '''
+
+    while True:
+        date = datetime.now().day
+        dates = [data for subdates in getlistTransmitData for data in subdates]
+        if date not in (dates):
+
+            connection = sqlite3.connect("./database.db")
+            cursor = connection.cursor()
+
+            cursor.execute('''
+            DELETE FROM Couples WHERE date < {date}
+            ''')
+
+            if flag:
+                cursor.execute(execution_flag0)
+                flag = 1
+            else:
+                cursor.execute(execution_flag1)
+                flag = 0
+        
+        connection.commit()
+        connection.close()
+
+
+
+
+
+
 app = Flask(__name__)
-
-
 
 #initDb()
 #addValues()
 #getListForRender(startDay, endDay)
-
-
-
-
 #Указатели начала и канца отслеживаемых данных
 
 @app.route('/')
@@ -115,7 +145,9 @@ def renderStudent():
 
     listTransmit = getListForRender(startDay, endDay)
 
-    return render_template("studentPage.html", listTransmit=listTransmit, listTransmitDate=listTransmitDate, dayNameList = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб'], currentday=currentday)
+    print(listTransmitDate)
+
+    return render_template("studentPage.html", listTransmit=listTransmit, listTransmitDate=listTransmitDate, dayNameList = ['пн', 'вт', 'ср', 'чт', 'пт', 'сб', 'вс'], currentday=currentday)
 
 @app.route('/mainPage.html')
 def renderMain_fromstudent():
