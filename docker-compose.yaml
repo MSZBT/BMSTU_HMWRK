@@ -9,10 +9,9 @@ services:
       - ./conf:/etc/nginx/conf.d
 
   flask:
-    container_name: flask
     build: .
     volumes:
     - ./app:/app
-    ports:
-    - "5000:5000"
+    deploy: 
+      replicas: 5
     command: flask --app main run --host=0.0.0.0
